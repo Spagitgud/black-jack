@@ -155,3 +155,33 @@ def dealer_wins(player,dealer,chips):
     
 def push(player,dealer):
     print('Dealer and player tie! PUSH!')
+
+while True:
+         print("Welcome to Blackjack"
+         deck = Deck()
+         deck.shuffle()
+         
+         player_hand = Hand()
+         player_hand.add_card(deck.deal())
+         player_hand.add_card(deck.deal())
+         
+         dealer_hand = Hand()
+         dealer_hand.add_card(deck.deal())
+         dealer_hand.add_card(deck.deal())
+         
+         player_chips = Chips()
+         
+         take_bet(player_chips)
+         
+         show_some(player_hand,dealer_hand)
+         
+         while playing:
+                  hit_or_stand(deck,player_hand)
+                  
+                  show_some(player_hand,dealer_hand)
+                  
+                  if player_hand.value >21:
+                           player_busts(player_hand,dealer_hand,player_chips)
+                           break
+                  
+         
