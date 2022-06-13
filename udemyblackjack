@@ -25,7 +25,7 @@ class Deck():
     def __init__(self):
         self.deck = []
         for suit in suits:
-            for rank in ranks:
+            for rank in ranks:   
                 self.deck.append(Card(suit,rank))
     
     def __str__(self):
@@ -41,6 +41,117 @@ class Deck():
         single_card = self.deck.pop()
         return single_card
     
-testdeck = Deck()
-testdeck.shuffle()
-print (testdeck)
+#testdeck = Deck()
+#testdeck.shuffle()
+#print (testdeck)
+
+class Hand():
+    def __init__(self):
+        self.cards=[]
+        self.value = 0
+        self.aces = 0
+        
+    def add_card(self,card):
+        #card passed in
+        #from Deck.deal()-->single Card(suit,rank)
+        self.cards.append(card)
+        self.value += values[card.rank]
+        
+        #track aces
+        if card.rank == 'Ace':
+            self.aces +=1
+        
+    def adjust_for_ace(self):
+        #IF TOTAL VALUE >21 AND I STILL HAVE AN ACE, THEN CHANGE MY ACE TO BE 1 INSTEAD OF 11
+        while self.value >21 and self.aces >0:
+            self.value -= 10
+            self.aces -= 1
+            
+class Chips():
+    def __init__(self,total=100):
+        self.total = total
+        self.bet = 0
+        
+    def win_bet(self):
+        self.total += self.bet
+        
+    def lose_bet(self):
+        self.total -= self.bet
+        
+def take_bet(chips):
+    while True:
+        try:
+            chips.bet = int(input("How many chops would you like to bet?"))
+        except:
+            print("sorry please provide an integer")
+        else:
+            if chips.bet >chips.total:
+                print("Sorry, you do not have enough chips! You have {}".format(chips.total))
+            else:
+                break
+            
+def hit(deck,hand):
+    single_card = deck.deal()
+    hand.add_card(single_card)
+    hand.adjust_for_ace()
+    
+def hit_or_stand(deck,hand):
+    global playing #to control an upcoming while loop
+    
+    while True:
+        x = input ('Hit or Stand? enter h or s')
+        
+        if x[0].lower() == 'h':
+            hit(deck,hand)
+            
+        elif x[0].lower == 's':
+            print("Player Stands dealer's turn")
+            playing  = False
+        
+        else:
+            print("Sorry, I did not understand, Please enter h or s only!!")
+            continue
+        break
+    
+def show_some(player,dealer):
+    #SHOW ONLY ONE OF THE DEALER'S CARD
+    print("\n Dealer's Hand: " )
+    print ("First Card hidden!")
+    print(dealer.cards[1])
+    #SHOW ALL (2 CARDS) OF THE PLAYER'S HAND/CARDS
+    print("\n Player's Hand: " )
+    for card in player.cards:
+        print(card)
+    
+    
+def show_all(player,dealer):
+    #SHOW ALL OF THE DEALER'S CARDS
+    print("\n Dealer's Hand: " )
+    for card in dealer.cards:
+        print(card)
+    #CALCULATE AND DISPLAYER VALUE(J+K == 20)
+    print(f"Value of Dealer's hand is: {dealer.value} ")
+    #SHOW ALL OF THE PLAYERS CARDS
+    print("\n Player's Hand: " )
+    for card in player.cards:
+        print(card)
+    print(f"Value of Player's hand is: {player.value} ")
+    
+def player_busts(player,dealer,chips):
+    print("Bust Player!")
+    chips.lose.bet
+    
+def player_wins (player,dealer,chips):
+    print('PLAYER WINS!')
+    chips.win_bet()
+    
+def dealer_busts (player,dealer,chips):
+    print ("Player Wins! Dealer Busted!")
+    chips.win_bet()
+    
+def dealer_wins(player,dealer,chips):
+    print("Dealer Wins!")
+    chips.lose_bet()
+    
+def push(player,dealer):
+    print('Dealer and player tie! PUSH!')
